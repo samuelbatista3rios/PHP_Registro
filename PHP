@@ -1,0 +1,38 @@
+<?php
+// Conexão com o banco de dados
+$servername = "localhost";
+$username = "root"; // Usuário padrão do MySQL no XAMPP
+$password = "";     // Senha padrão (geralmente vazia no XAMPP)
+$dbname = "unifi_registro";
+
+// Cria a conexão
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verifica a conexão
+if ($conn->connect_error) {
+    die("Falha na conexão: " . $conn->connect_error);
+}
+
+// Processa o formulário ao submeter
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $PRIMEIRO_NOME = $_POST['PRIMEIRO_NOME'];
+    $ULTIMO_NOME = $_POST['ULTIMO_NOME'];
+    $EMAIL = $_POST['EMAIL'];
+    $SENHA = $_POST['SENHA'];
+    $dispositivo = $_SERVER['REMOTE_ADDR']; // IP do dispositivo
+    
+
+    // Insere os dados no banco
+    $sql = "INSERT INTO usuarios (PRIMEIRO_NOME,ULTIMO_NOME, EMAIL, SENHA, DISPOSITIVO, DATA_ACESSO)
+            VALUES ('$PRIMEIRO_NOME', '$ULTIMO_NOME', '$EMAIL', '$SENHA','$dispositivo', NOW())";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Cadastro realizado com sucesso!";
+    } else {
+        echo "Erro ao cadastrar: " . $conn->error;
+    }
+}
+
+// Fecha a conexão
+$conn->close();
+?>
